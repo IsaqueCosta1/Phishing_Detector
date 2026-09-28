@@ -29,13 +29,17 @@ class CostMatrix:
 
 COSTS = CostMatrix()
 
+# HttpsInHostname fica de fora: é constante no dataset (sempre 0) e o
+# data.clean() a remove. Se uma versão nova do dataset tiver variação
+# nela, adicione-a de volta aqui.
+
 
 URL_FEATURES: tuple[str, ...] = (
     "NumDots", "SubdomainLevel", "PathLevel", "UrlLength", "NumDash",
     "NumDashInHostname", "AtSymbol", "TildeSymbol", "NumUnderscore",
     "NumPercent", "NumQueryComponents", "NumAmpersand", "NumHash",
     "NumNumericChars", "NoHttps", "RandomString", "IpAddress",
-    "DomainInSubdomains", "DomainInPaths", "HttpsInHostname",
+    "DomainInSubdomains", "DomainInPaths",
     "HostnameLength", "PathLength", "QueryLength", "DoubleSlashInPath",
     "NumSensitiveWords", "EmbeddedBrandName", "SubdomainLevelRT",
     "UrlLengthRT",
