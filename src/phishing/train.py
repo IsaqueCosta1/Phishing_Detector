@@ -1,5 +1,3 @@
-from sklearn.metrics import roc_auc_score
-
 import time
 
 import numpy as np
@@ -8,9 +6,6 @@ from sklearn.metrics import f1_score, make_scorer, precision_score, recall_score
 from sklearn.model_selection import StratifiedKFold, cross_validate
 
 from phishing import config, data, models
-
-df_raw = data.load_raw(config.RAW_CSV)
-df_limpo, audit = data.clean(df_raw)
 
 # O dummy nunca prevê a classe positiva, então a precisão fica indefinida (0/0).
 # Declarar zero_division=0 torna a escolha explícita em vez de deixar o sklearn
@@ -49,11 +44,15 @@ def compare_models(X_train, y_train, n_splits: int = 5) -> pd.DataFrame:
 def main():
     df_limpo, audit = data.clean(data.load_raw())
     X_tr, X_te, y_tr, y_te = data.split(df_limpo)
-    for nome, pipe in models.get_candidates().items():
-        pipe.fit(X_tr, y_tr)
-        proba = pipe.predict_proba(X_te)[:, 1]
-        print(f"{nome:<22} ROC-AUC = {roc_auc_score(y_te, proba):.4f}")
+    print(f"Treino: {len(X_tr)} linhas | Teste: {len(X_te)} linhas (reservado)\n")
 
+    ranking = compare_models(X_tr, y_tr)
+
+    print("\nRanking (média ± desvio em 5 folds):")
+    colunas = ["model", "roc_auc_mean", "roc_auc_std",
+               "average_precision_mean", "recall_mean", "precision_mean"]
+    print(ranking[colunas].to_string(index=False, float_format="%.4f"))
 
 if __name__ == "__main__":
     main()
+
