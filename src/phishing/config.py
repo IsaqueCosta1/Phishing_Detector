@@ -11,6 +11,10 @@ RANDOM_STATE = 42
 TARGET = "CLASS_LABEL"      # 1 = phishing, 0 = legítimo
 ID_COLUMN = "id"
 
+# Empata com o random_forest dentro do desvio da CV (0,9981 vs 0,9979),
+# mas treina mais rápido e gera um artefato bem menor.
+FINAL_MODEL = "hist_gradient_boosting"
+
 
 @dataclass(frozen=True)
 class CostMatrix:
