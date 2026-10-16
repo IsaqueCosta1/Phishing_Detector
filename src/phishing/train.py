@@ -8,6 +8,7 @@ from sklearn.metrics import f1_score, make_scorer, precision_score, recall_score
 from sklearn.model_selection import StratifiedKFold, cross_val_predict, cross_validate
 
 from phishing import config, data, evaluate, models
+from phishing.predict import Detector
 
 # O dummy nunca prevê a classe positiva, então a precisão fica indefinida (0/0).
 # Declarar zero_division=0 torna a escolha explícita em vez de deixar o sklearn
@@ -134,8 +135,17 @@ def main():
     print(comparacao.to_string(float_format="%.3f"))
 
     print("\nAvaliação final no teste (única vez que o teste é usado):")
-    _, teste = final_evaluation(X_tr, y_tr, X_te, y_te, limiar)
+    modelo, teste = final_evaluation(X_tr, y_tr, X_te, y_te, limiar)
     print(pd.DataFrame(teste).T.to_string(float_format="%.4f"))
+
+    # Salva exatamente o modelo avaliado acima, com o limiar escolhido no OOF.
+    detector = Detector(pipeline=modelo, threshold=limiar,
+                        features=list(X_tr.columns),
+                        metadata={"modelo": config.FINAL_MODEL,
+                                  "n_linhas_treino": len(X_tr),
+                                  "custos": asdict(config.COSTS)})
+    caminho = detector.save()
+    print(f"\nDetector salvo em {caminho.relative_to(config.ROOT)}")
 
     save_report({
         "auditoria": asdict(audit),
