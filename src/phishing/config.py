@@ -14,7 +14,7 @@ TARGET = "CLASS_LABEL"      # 1 = phishing, 0 = legítimo
 ID_COLUMN = "id"
 
 # Empata com o random_forest dentro do desvio da CV (0,9981 vs 0,9979),
-# mas treina mais rápido e gera um artefato bem menor.
+# mas treina ~3x mais rápido e o modelo salvo tem 0,4 MB contra 25 MB.
 FINAL_MODEL = "hist_gradient_boosting"
 
 
