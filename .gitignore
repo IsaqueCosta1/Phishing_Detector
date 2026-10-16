@@ -10,4 +10,5 @@ dist/
 data/raw/*
 !data/raw/.gitkeep
 models/*.joblib
-reports/
+reports/*
+!reports/metrics.json
