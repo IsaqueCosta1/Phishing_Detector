@@ -155,13 +155,3 @@ mostram é exatamente o que o `train.py` executa.
 - **A matriz de custo é uma premissa**, não um valor medido. Ela fica isolada
   em `config.CostMatrix` para ser discutida; ao mudá-la, o limiar se reajusta
   sozinho.
-
-## Próximos passos
-
-- **Triagem em dois estágios:** a URL decide os casos claros antes de abrir a
-  página, e o HTML só é baixado na zona cinzenta.
-- **Modelo reduzido:** 26 das 47 features têm importância por permutação
-  praticamente nula. Vale testar na CV se um modelo só com as restantes mantém
-  o desempenho, o que deixaria o extrator de features mais barato.
-- **Extrator de features** a partir da URL e do HTML, para classificar um link
-  diretamente.
