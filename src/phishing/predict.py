@@ -1,7 +1,7 @@
 """Detector empacotado (modelo + limiar + features) e CLI de predição.
 
-Uso:
-    python -m phishing.predict sites.csv [-o resultado.csv]
+Uso (a partir da raiz do projeto):
+    python -m phishing.predict data/raw/Phishing_Legitimate_full.csv [-o resultado.csv]
 """
 
 import argparse
@@ -87,9 +87,17 @@ def main(argv=None):
     parser.add_argument("--modelo", type=Path, default=config.MODEL_PATH)
     args = parser.parse_args(argv)
 
-    detector = Detector.load(args.modelo)
-    df = pd.read_csv(args.entrada)
-    resultado = df.join(detector.predict(df))
+    if not args.entrada.exists():
+        parser.error(f"arquivo não encontrado: {args.entrada} "
+                     f"(caminho relativo a {Path.cwd()})")
+
+    # Erros esperados de uso viram mensagem curta, não traceback.
+    try:
+        detector = Detector.load(args.modelo)
+        df = pd.read_csv(args.entrada)
+        resultado = df.join(detector.predict(df))
+    except (FileNotFoundError, ValueError) as erro:
+        parser.exit(1, f"erro: {erro}\n")
 
     n = int(resultado["bloquear"].sum())
     print(f"{len(df)} sites | {n} bloqueados ({n / len(df):.1%}) "

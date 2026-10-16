@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import LogisticRegression
 
-from phishing.predict import Detector
+from phishing.predict import Detector, main
 
 
 @pytest.fixture
@@ -43,3 +43,10 @@ def test_feature_faltando_gera_erro_claro(detector_e_dados):
     det, X = detector_e_dados
     with pytest.raises(ValueError, match="Faltam 1 features.*b"):
         det.score(X[["a"]])
+
+
+def test_cli_arquivo_inexistente_sai_sem_traceback(capsys):
+    with pytest.raises(SystemExit) as saida:
+        main(["nao_existe.csv"])
+    assert saida.value.code != 0
+    assert "arquivo não encontrado" in capsys.readouterr().err
