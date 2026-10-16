@@ -24,3 +24,15 @@ def test_confusion_at_conta_erros_e_custo():
     r = evaluate.confusion_at(y, scores, 0.5, config.CostMatrix(10.0, 1.0))
     assert (r["fp"], r["fn"]) == (1, 1)
     assert r["custo"] == 11.0
+
+
+def test_report_separa_ordenacao_de_decisao():
+    y = np.array([0, 0, 1, 1])
+    scores = np.array([0.1, 0.2, 0.3, 0.4])   # ordenação perfeita
+
+    r = evaluate.report(y, scores, threshold=0.5)
+    # A ordenação é perfeita (AUC = 1), mas o limiar alto não bloqueia
+    # nada: AUC não diz nada sobre a qualidade da decisão.
+    assert r["roc_auc"] == 1.0
+    assert r["recall"] == 0.0
+    assert r["fn"] == 2

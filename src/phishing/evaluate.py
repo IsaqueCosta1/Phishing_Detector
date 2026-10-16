@@ -1,7 +1,9 @@
-"""Escolha do limiar de decisão pelo custo."""
+"""Escolha do limiar de decisão pelo custo e métricas finais."""
 
 import numpy as np
 import pandas as pd
+from sklearn.metrics import (average_precision_score, precision_score,
+                             recall_score, roc_auc_score)
 
 from phishing import config
 
@@ -27,3 +29,20 @@ def best_threshold(y, scores, costs=config.COSTS) -> float:
     curva = cost_curve(y, scores, costs)
     empatados = curva.loc[curva["custo"] == curva["custo"].min(), "limiar"]
     return float(empatados.max())
+
+
+def report(y, scores, threshold, costs=config.COSTS) -> dict:
+    """Métricas num limiar já fixado. Não escolhe nada a partir de y.
+
+    ROC-AUC e AP olham só a ordenação dos scores (independem do limiar);
+    recall, precisão e custo dependem da decisão tomada no limiar.
+    """
+    y = np.asarray(y)
+    pred = np.asarray(scores) >= threshold
+    return {
+        "roc_auc": float(roc_auc_score(y, scores)),
+        "average_precision": float(average_precision_score(y, scores)),
+        "recall": float(recall_score(y, pred, zero_division=0)),
+        "precision": float(precision_score(y, pred, zero_division=0)),
+        **confusion_at(y, scores, threshold, costs),
+    }
