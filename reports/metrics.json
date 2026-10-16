@@ -44,7 +44,7 @@
       "recall_std": 0.001378748666634001,
       "precision_mean": 0.9795810418802535,
       "precision_std": 0.003851790175576334,
-      "fit_time_s": 1.75
+      "fit_time_s": 1.56
     },
     {
       "model": "logistic_regression",
@@ -58,7 +58,7 @@
       "recall_std": 0.009716375930655824,
       "precision_mean": 0.9303402961133255,
       "precision_std": 0.0030411384590083032,
-      "fit_time_s": 0.68
+      "fit_time_s": 0.66
     },
     {
       "model": "decision_tree",
@@ -72,7 +72,7 @@
       "recall_std": 0.005139575763579772,
       "precision_mean": 0.9608248573201357,
       "precision_std": 0.006519570730428481,
-      "fit_time_s": 0.8
+      "fit_time_s": 0.64
     },
     {
       "model": "dummy",
@@ -86,7 +86,7 @@
       "recall_std": 0.0,
       "precision_mean": 0.0,
       "precision_std": 0.0,
-      "fit_time_s": 0.91
+      "fit_time_s": 0.77
     }
   ],
   "ablacao": [
@@ -131,6 +131,243 @@
       "recall_std": 0.0050929610265698375,
       "precision_mean": 0.9818058635641032,
       "precision_std": 0.0047655039313776095
+    }
+  ],
+  "importancia_permutacao": [
+    {
+      "feature": "PctExtHyperlinks",
+      "queda_media": 0.010951997219556215,
+      "queda_std": 0.0016672800466961968
+    },
+    {
+      "feature": "PctNullSelfRedirectHyperlinks",
+      "queda_media": 0.007370267453830976,
+      "queda_std": 0.001183927672350041
+    },
+    {
+      "feature": "PctExtNullSelfRedirectHyperlinksRT",
+      "queda_media": 0.003821023148254752,
+      "queda_std": 0.0008907168146826325
+    },
+    {
+      "feature": "InsecureForms",
+      "queda_media": 0.003216729139898784,
+      "queda_std": 0.0007920506128047595
+    },
+    {
+      "feature": "PctExtResourceUrls",
+      "queda_media": 0.00288720991440071,
+      "queda_std": 0.0006508673623521665
+    },
+    {
+      "feature": "FrequentDomainNameMismatch",
+      "queda_media": 0.0023520922552408186,
+      "queda_std": 0.0008525811178392535
+    },
+    {
+      "feature": "NumDash",
+      "queda_media": 0.0021571647220701173,
+      "queda_std": 0.0006238322594807265
+    },
+    {
+      "feature": "PathLevel",
+      "queda_media": 0.001553276097707501,
+      "queda_std": 0.0005282320814181766
+    },
+    {
+      "feature": "SubmitInfoToEmail",
+      "queda_media": 0.0012503188953535238,
+      "queda_std": 0.00041536613658963166
+    },
+    {
+      "feature": "NumNumericChars",
+      "queda_media": 0.0009245365035693531,
+      "queda_std": 0.0005309993721180615
+    },
+    {
+      "feature": "NumDots",
+      "queda_media": 0.0009166698197977441,
+      "queda_std": 0.00022862200371830298
+    },
+    {
+      "feature": "ExtFavicon",
+      "queda_media": 0.0008798934033102545,
+      "queda_std": 0.00025074185370370264
+    },
+    {
+      "feature": "NumSensitiveWords",
+      "queda_media": 0.0006071755604542251,
+      "queda_std": 0.0002845623594506241
+    },
+    {
+      "feature": "QueryLength",
+      "queda_media": 0.00039963375278087023,
+      "queda_std": 0.0001955705944072114
+    },
+    {
+      "feature": "SubdomainLevel",
+      "queda_media": 0.00033244389222882644,
+      "queda_std": 0.00011874186381407311
+    },
+    {
+      "feature": "IframeOrFrame",
+      "queda_media": 0.00025356526752708054,
+      "queda_std": 0.000136869659675689
+    },
+    {
+      "feature": "ExtMetaScriptLinkRT",
+      "queda_media": 0.00022834534419308383,
+      "queda_std": 0.0001234933745152201
+    },
+    {
+      "feature": "NumDashInHostname",
+      "queda_media": 0.00021445748651031327,
+      "queda_std": 0.000156146847999471
+    },
+    {
+      "feature": "PathLength",
+      "queda_media": 0.00018948417200685962,
+      "queda_std": 0.00021909591739509442
+    },
+    {
+      "feature": "NoHttps",
+      "queda_media": 0.00016793644916991647,
+      "queda_std": 0.00013463369042051638
+    },
+    {
+      "feature": "NumPercent",
+      "queda_media": 0.00011868893548599768,
+      "queda_std": 8.328794740805472e-05
+    },
+    {
+      "feature": "NumUnderscore",
+      "queda_media": 9.841079470863878e-05,
+      "queda_std": 0.0001308448920220153
+    },
+    {
+      "feature": "RelativeFormAction",
+      "queda_media": 9.16004107084989e-05,
+      "queda_std": 0.00012637700749595018
+    },
+    {
+      "feature": "NumQueryComponents",
+      "queda_media": 8.541050419472285e-05,
+      "queda_std": 0.00011790114647843222
+    },
+    {
+      "feature": "HostnameLength",
+      "queda_media": 4.7634384483328244e-05,
+      "queda_std": 0.00014051383613213216
+    },
+    {
+      "feature": "ExtFormAction",
+      "queda_media": 3.8403099018551325e-05,
+      "queda_std": 5.294324214556222e-05
+    },
+    {
+      "feature": "PctExtResourceUrlsRT",
+      "queda_media": 3.766129290279085e-05,
+      "queda_std": 2.177698557025497e-05
+    },
+    {
+      "feature": "RandomString",
+      "queda_media": 3.411831161700185e-05,
+      "queda_std": 4.14540182712268e-05
+    },
+    {
+      "feature": "EmbeddedBrandName",
+      "queda_media": 2.6684466038982003e-05,
+      "queda_std": 4.9408936203791085e-05
+    },
+    {
+      "feature": "DomainInPaths",
+      "queda_media": 2.6008233868668462e-05,
+      "queda_std": 4.6445211162324056e-05
+    },
+    {
+      "feature": "UrlLength",
+      "queda_media": 2.439517189622986e-05,
+      "queda_std": 0.000178864468465783
+    },
+    {
+      "feature": "AbnormalExtFormActionR",
+      "queda_media": 1.7300755794433796e-05,
+      "queda_std": 7.426593034884482e-05
+    },
+    {
+      "feature": "IpAddress",
+      "queda_media": 1.6373531473021785e-05,
+      "queda_std": 2.5713053129277354e-05
+    },
+    {
+      "feature": "SubdomainLevelRT",
+      "queda_media": 1.1938853489783519e-05,
+      "queda_std": 1.4388062178483235e-05
+    },
+    {
+      "feature": "NumAmpersand",
+      "queda_media": 9.558275643390956e-06,
+      "queda_std": 3.787426716469566e-05
+    },
+    {
+      "feature": "UrlLengthRT",
+      "queda_media": 2.7297877360377142e-06,
+      "queda_std": 4.499843299387142e-06
+    },
+    {
+      "feature": "AbnormalFormAction",
+      "queda_media": 1.9125970203281993e-06,
+      "queda_std": 8.768726462400255e-06
+    },
+    {
+      "feature": "DomainInSubdomains",
+      "queda_media": 5.456095427636143e-07,
+      "queda_std": 1.651721501967087e-06
+    },
+    {
+      "feature": "AtSymbol",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "NumHash",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "TildeSymbol",
+      "queda_media": 0.0,
+      "queda_std": 4.822832226735353e-07
+    },
+    {
+      "feature": "DoubleSlashInPath",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "FakeLinkInStatusBar",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "RightClickDisabled",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "PopUpWindow",
+      "queda_media": 0.0,
+      "queda_std": 0.0
+    },
+    {
+      "feature": "ImagesOnlyInForm",
+      "queda_media": -2.0480061046601606e-07,
+      "queda_std": 8.003009866987755e-06
+    },
+    {
+      "feature": "MissingTitle",
+      "queda_media": -2.594037393452986e-06,
+      "queda_std": 1.911233086703361e-05
     }
   ],
   "limiar": {

@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "jupyter", "matplotlib", "seaborn"]
+dev = ["pytest", "jupyter", "matplotlib", "seaborn", "shap>=0.46"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

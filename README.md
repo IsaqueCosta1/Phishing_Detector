@@ -80,6 +80,22 @@ operacional: o gradient boosting treina ~3× mais rápido e o modelo salvo tem
 Só com a URL, cerca de 1 em cada 11 phishings passaria. O HTML é a fonte mais
 informativa, mas as duas juntas erram menos do que qualquer uma sozinha.
 
+**Interpretabilidade** (permutation importance medida nos folds de validação, e SHAP):
+
+- As duas técnicas concordam: 9 das 10 features mais importantes coincidem
+  (Spearman 0,96). O modelo se apoia sobretudo em **para onde a página
+  aponta**: links externos, links nulos ("#") e domínio dos links.
+- A feature mais importante, `PctExtHyperlinks`, tem uma relação **em U** com o
+  phishing: 86% das páginas sem nenhum link externo são phishing (kits
+  autocontidos), assim como 96% das que têm mais de 80% de links externos
+  (clones de marca). Os sites legítimos ficam no meio. A correlação linear da
+  EDA (0,26) subestimava essa feature, e isso explica por que a regressão
+  logística perde para as árvores.
+- Nos 8 phishings que o limiar 0,5 deixaria passar no teste, o SHAP mostra o
+  que os puxou para baixo: em 4 deles, o sinal mais forte de legitimidade foi
+  um formulário enviado por HTTPS (`InsecureForms = 0`). São phishings que
+  imitam o sinal clássico de segurança. O notebook 02 explica um deles.
+
 **Limiar** (scores out-of-fold no treino): ao baixar o limiar de 0,5 para
 0,105, os phishings perdidos caem de 60 para 25 e os bloqueios indevidos sobem
 de 67 para 156. O custo total cai de 667 para 406 (−39%). No teste, a mesma
@@ -97,7 +113,7 @@ pip install -e ".[dev]"
 python -m phishing.train     # compara modelos, ablação, limiar, teste final;
                              # salva models/phishing_detector.joblib e reports/metrics.json
 python -m phishing.predict data/raw/Phishing_Legitimate_full.csv -o resultado.csv
-pytest                       # 10 testes
+pytest                       # 11 testes
 ```
 
 O `predict` recebe um CSV com as 47 features (colunas extras são ignoradas) e
@@ -114,11 +130,12 @@ src/phishing/
 ├── models.py      # candidatos (pipelines do scikit-learn)
 ├── train.py       # validação cruzada, ablação, scores out-of-fold, avaliação final
 ├── evaluate.py    # curva de custo, escolha do limiar, métricas
+├── interpret.py   # permutation importance na CV e SHAP
 └── predict.py     # Detector (modelo + limiar + features) e a CLI
 notebooks/
 ├── 01_analise_exploratoria.ipynb
 └── 02_modelagem_e_avaliacao.ipynb
-tests/             # limpeza sem vazamento, limiar, salvamento do detector, CLI
+tests/             # limpeza sem vazamento, limiar, interpretabilidade, detector, CLI
 ```
 
 A lógica vive em `src/` e os notebooks só a chamam. Assim, o que os notebooks
@@ -143,6 +160,8 @@ mostram é exatamente o que o `train.py` executa.
 
 - **Triagem em dois estágios:** a URL decide os casos claros antes de abrir a
   página, e o HTML só é baixado na zona cinzenta.
-- **Interpretabilidade** com *permutation importance* e SHAP.
+- **Modelo reduzido:** 26 das 47 features têm importância por permutação
+  praticamente nula. Vale testar na CV se um modelo só com as restantes mantém
+  o desempenho, o que deixaria o extrator de features mais barato.
 - **Extrator de features** a partir da URL e do HTML, para classificar um link
   diretamente.

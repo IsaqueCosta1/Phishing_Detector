@@ -3,7 +3,7 @@
 from dataclasses import dataclass, asdict
 import json
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, train_test_split
 from phishing import config
 
 # Auditoria
@@ -62,3 +62,9 @@ def split(df: pd.DataFrame,
     return train_test_split(
         X, y, test_size=test_size, random_state=random_state, stratify=y
     )
+
+
+def cv_folds(n_splits: int = 5) -> StratifiedKFold:
+    """Mesmos folds em toda etapa, para as comparações serem justas."""
+    return StratifiedKFold(n_splits=n_splits, shuffle=True,
+                           random_state=config.RANDOM_STATE)

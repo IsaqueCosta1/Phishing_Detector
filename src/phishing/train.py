@@ -5,9 +5,9 @@ from dataclasses import asdict
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, make_scorer, precision_score, recall_score
-from sklearn.model_selection import StratifiedKFold, cross_val_predict, cross_validate
+from sklearn.model_selection import cross_val_predict, cross_validate
 
-from phishing import config, data, evaluate, models
+from phishing import config, data, evaluate, interpret, models
 from phishing.predict import Detector
 
 # O dummy nunca prevê a classe positiva, então a precisão fica indefinida (0/0).
@@ -20,12 +20,6 @@ SCORING = {
     "recall": make_scorer(recall_score, zero_division=0),
     "precision": make_scorer(precision_score, zero_division=0),
 }
-
-
-def _cv(n_splits: int) -> StratifiedKFold:
-    """Mesmos folds em toda etapa, para as comparações serem justas."""
-    return StratifiedKFold(n_splits=n_splits, shuffle=True,
-                           random_state=config.RANDOM_STATE)
 
 
 def _avaliar(pipe, X, y, cv) -> dict[str, float]:
@@ -41,7 +35,7 @@ def _avaliar(pipe, X, y, cv) -> dict[str, float]:
 
 def compare_models(X_train, y_train, n_splits: int = 5) -> pd.DataFrame:
     """Compara candidatos por CV estratificada. Só toca no treino."""
-    cv = _cv(n_splits)
+    cv = data.cv_folds(n_splits)
     linhas = []
     for nome, pipe in models.get_candidates().items():
         t0 = time.perf_counter()
@@ -58,7 +52,7 @@ def compare_models(X_train, y_train, n_splits: int = 5) -> pd.DataFrame:
 def ablation(X_train, y_train, model_name: str = config.FINAL_MODEL,
              n_splits: int = 5) -> pd.DataFrame:
     """Mesmo modelo, conjuntos de features diferentes. Só toca no treino."""
-    cv = _cv(n_splits)
+    cv = data.cv_folds(n_splits)
     linhas = []
     for nome_conjunto, features in config.FEATURE_SETS.items():
         pipe = models.get_candidates()[model_name]
@@ -77,7 +71,7 @@ def oof_scores(X_train, y_train, model_name: str = config.FINAL_MODEL,
     modelo no próprio treino ficam colados em 0 e 1 e escondem os erros.
     """
     pipe = models.get_candidates()[model_name]
-    return cross_val_predict(pipe, X_train, y_train, cv=_cv(n_splits),
+    return cross_val_predict(pipe, X_train, y_train, cv=data.cv_folds(n_splits),
                              method="predict_proba", n_jobs=-1)[:, 1]
 
 
@@ -125,6 +119,11 @@ def main():
                    "roc_auc_std", "average_precision_mean", "recall_mean"]
     print(abl[colunas_abl].to_string(index=False, float_format="%.4f"))
 
+    print("\nImportância por permutação (queda de ROC-AUC na validação, top 10):")
+    importancia = interpret.permutation_importance_cv(
+        models.get_candidates()[config.FINAL_MODEL], X_tr, y_tr)
+    print(importancia.head(10).to_string(index=False, float_format="%.4f"))
+
     razao = config.COSTS.false_negative / config.COSTS.false_positive
     print(f"\nLimiar de decisão (out-of-fold, FN = {razao:g}x FP):")
     scores = oof_scores(X_tr, y_tr)
@@ -153,6 +152,7 @@ def main():
         "custos": asdict(config.COSTS),
         "cv_ranking": ranking.to_dict(orient="records"),
         "ablacao": abl.to_dict(orient="records"),
+        "importancia_permutacao": importancia.to_dict(orient="records"),
         "limiar": {"escolhido_oof": limiar,
                    "oof": comparacao.to_dict(orient="index")},
         "teste": teste,
